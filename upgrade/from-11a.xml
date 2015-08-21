@@ -3,14 +3,6 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>WadaNon:SuperSimpleThreadTags</id>
 	<version>1.2</version>
-	<file name="$sourcedir/Subs.php">
-		<operation>
-			<search position="replace"><![CDATA[
-		if (!$context['is_guest'] && $canSearch)]]></search>
-			<add><![CDATA[
-		if (!$context['user']['is_guest'] && $canSearch)]]></add>
-		</operation>
-	</file>
 	<file name="$boarddir/SSI.php">
 		<operation>
 			<search position="after"><![CDATA[
