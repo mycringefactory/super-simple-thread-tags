@@ -1,0 +1,350 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>WadaNon:SuperSimpleThreadTags</id>
+	<version>1.1a</version>
+	<file name="$sourcedir/Display.php">
+		<operation>
+			<search position="replace"><![CDATA[
+	$context['page_title'] = $topicinfo['subject'];]]></search>
+			<add><![CDATA[
+	$context['page_title'] = stripThreadTags($topicinfo['subject']);]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+	// Build the link tree.]]></search>
+			<add><![CDATA[
+	// Make our tags.
+	$threadTags = makeThreadTags($topicinfo['subject']);
+
+	$topicinfo['subject'] = $threadTags[0];
+	$threadTags = $threadTags[1];
+]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[
+		'name' => $topicinfo['subject']]]></search>
+			<add><![CDATA[ . ' ' . $threadTags]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[
+		'subject' => $message['subject'],]]></search>
+			<add><![CDATA[
+		'subject' => stripThreadTags($message['subject']),]]></add>
+		</operation>
+	</file>
+	<file name="$sourcedir/MessageIndex.php">
+		<operation>
+			<search position="after"><![CDATA[
+			if (!empty($settings['message_index_preview']))]]></search>
+			<add><![CDATA[
+			// Make our thread tags.
+			$threadTags = makeThreadTags($row['first_subject']);
+
+			$row['first_subject'] = $threadTags[0];
+			$threadTags = $threadTags[1];
+]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[
+					'subject' => $row['first_subject'],]]></search>
+			<add><![CDATA[
+					'tags' => $threadTags,]]></add>
+		</operation>
+	</file>
+	<file name="$sourcedir/Profile-View.php">
+		<operation>
+			<search position="after"><![CDATA[
+		// And the array...]]></search>
+			<add><![CDATA[
+		// Make our tags.
+		$threadTags = makeThreadTags($row['subject']);
+
+		$row['subject'] = $threadTags[0];
+		$threadTags = $threadTags[1];
+]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[
+			'subject' => $row['subject'],]]></search>
+			<add><![CDATA[
+			'tags' => $threadTags,]]></add>
+		</operation>
+	</file>
+	<file name="$sourcedir/Recent.php">
+		<operation>
+			<search position="after"><![CDATA[
+	// Send the data.]]></search>
+			<add><![CDATA[
+	// Tags are hard...
+	$threadTags = makeThreadTags($row['subject']);
+
+	$row['subject'] = $threadTags[0];
+	$threadTags = $threadTags[1];
+]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[
+		'subject' => $row['subject'],]]></search>
+			<add><![CDATA[
+		'tags' => $threadTags,]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+		// Censor everything.]]></search>
+			<add><![CDATA[
+		// Make the tags before censoring.
+		$threadTags = makeThreadTags($row['subject']);
+
+		$row['subject'] = $threadTags[0];
+		$threadTags = $threadTags[1];
+]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[
+			'subject' => $row['subject'],]]></search>
+			<add><![CDATA[
+			'tags' => $threadTags,]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+		if (!empty($settings['message_index_preview']))]]></search>
+			<add><![CDATA[
+		// Make the tags before continuing.
+		$threadTags = makeThreadTags($row['first_subject']);
+
+		$row['first_subject'] = $threadTags[0];
+		$threadTags = $threadTags[1];
+]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[
+				'subject' => $row['first_subject'],]]></search>
+			<add><![CDATA[
+				'tags' => $threadTags,]]></add>
+		</operation>
+	</file>
+	<file name="$sourcedir/Search.php">
+		<operation>
+			<search position="after"><![CDATA[
+	// Do the censor thang...]]></search>
+			<add><![CDATA[
+	// Look, tags everywere!
+	$threadTags = array(
+		'subject' => makeThreadTags($message['subject']),
+		'first_subject' => makeThreadTags($message['first_subject']),
+	);
+
+	$message['first_subject'] = $threadTags['first_subject'][0];
+	$message['subject'] = $threadTags['subject'][0];
+]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[
+			'subject' => $message['first_subject'],]]></search>
+			<add><![CDATA[
+			'tags' => $threadTags['first_subject'][1],]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[
+		'subject' => $message['subject'],]]></search>
+			<add><![CDATA[
+		'tags' => $threadTags['subject'][1],]]></add>
+		</operation>
+	</file>
+	<file name="$sourcedir/Stats.php">
+		<operation>
+			<search position="after"><![CDATA[
+		censorText($row_topic_reply['subject']);]]></search>
+			<add><![CDATA[
+		// Stats deserve their tags too.
+		$threadTags = makeThreadTags($row_topic_reply['subject']);
+
+		$row_topic_reply['subject'] = $threadTags[0];
+		$threadTags = $threadTags[1];
+]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[
+			'subject' => $row_topic_reply['subject'],]]></search>
+			<add><![CDATA[
+			'tags' => $threadTags,]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+		censorText($row_topic_views['subject']);]]></search>
+			<add><![CDATA[
+		// Stats deserve their tags again too.
+		$threadTags = makeThreadTags($row_topic_views['subject']);
+
+		$row_topic_views['subject'] = $threadTags[0];
+		$threadTags = $threadTags[1];
+]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[
+			'subject' => $row_topic_views['subject'],]]></search>
+			<add><![CDATA[
+			'tags' => $threadTags,]]></add>
+		</operation>
+	</file>
+	<file name="$sourcedir/Subs.php">
+		<operation>
+			<search position="end" />
+			<add><![CDATA[
+// Make tags from thread subject.
+function makeThreadTags($title)
+{
+	global $context, $scripturl, $txt;
+	static $canSearch = null;
+
+	// Save the search permission to avoid adding more queries to the db.
+	// It saves lives (and servers) when there are too many tags to parse.
+	if ($canSearch === null)
+		$canSearch = allowedTo('search_posts');
+
+	preg_match_all('/\[(.*?)\]/', $title, $matches);
+
+	$tags = '';
+	foreach ($matches[1] as $tag)
+	{
+		$title = str_replace('[' . $tag . ']', '', $title);
+		$tag = htmlspecialchars(strtolower($tag));
+
+		// Start at a hue that makes "18" red.
+		$hash = -105;
+		for($i = 0; $i < strlen($tag); $i++)
+			$hash += ord($tag[$i]);
+
+		// That multiplier is only there to make "nsfw" and "18" the same color.
+		$color = 'hsl(' . (($hash * 57) % 360) . ', 70%, 40%)';
+
+		if (!$context['user']['is_guest'] && $canSearch)
+			$tags .= '<a class="threadTag" style="background-color: ' . $color . ';" href="' . $scripturl . '?action=search2;search=' . htmlspecialchars('[' . $tag . ']') . '" title="' . sprintf($txt['sstd_search_tag'], $tag) . '">' . $tag . '</a>';
+		else
+			$tags .= '<span class="threadTag" style="background-color: ' . $color . ';">' . $tag . '</span>';
+	}
+
+	return array(trim($title), $tags);
+}
+
+// Strip tags from title.
+function stripThreadTags($title)
+{
+	$title = makeThreadTags($title);
+	return $title[0];
+}]]></add>
+		</operation>
+	</file>
+	<file name="$sourcedir/Subs-BoardIndex.php">
+		<operation>
+			<search position="before"><![CDATA[
+		// Prepare the subject, and make sure it's not too long.]]></search>
+			<add><![CDATA[
+		$row_board['subject'] = stripThreadTags($row_board['subject']);]]></add>
+		</operation>
+	</file>
+	<file name="$sourcedir/Subs-Recent.php">
+		<operation>
+			<search position="after"><![CDATA[
+		// Censor the subject and post for the preview ;).]]></search>
+			<add><![CDATA[
+		// Make the tags before censoring.
+		$threadTags = makeThreadTags($row['subject']);
+
+		$row['subject'] = $threadTags[0];
+		$threadTags = $threadTags[1];
+]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[
+			'subject' => $row['subject'],]]></search>
+			<add><![CDATA[
+			'tags' => $threadTags,]]></add>
+		</operation>
+	</file>
+	<file name="$themedir/MessageIndex.template.php">
+		<operation>
+			<search position="before"><![CDATA[', $topic['is_sticky'] ? '<strong>' : '', '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], (!$context['can_approve_posts'] && !$topic['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), '</span>', $topic['is_sticky'] ? '</strong>' : '']]></search>
+			<add><![CDATA[, $topic['first_post']['tags'] ? ' ' . $topic['first_post']['tags'] : '']]></add>
+		</operation>
+	</file>
+	<file name="$themedir/Profile.template.php">
+		<operation>
+			<search position="before"><![CDATA[<h5><strong><a href="', $scripturl, '?board=', $post['board']['id'], '.0">', $post['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $post['topic'], '.', $post['start'], '#msg', $post['id'], '">', $post['subject'], '</a></strong>]]></search>
+			<add><![CDATA[', $post['tags'] ? ' ' . $post['tags'] : '', ']]></add>
+		</operation>
+	</file>
+	<file name="$themedir/Recent.template.php">
+		<operation>
+			<search position="before"><![CDATA[$post['board']['link'], ' / ', $post['link'], ]]></search>
+			<add><![CDATA[$post['tags'] ? ' ' . $post['tags'] : '', ]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[', $topic['is_sticky'] ? '<strong>' : '', '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '', ]]></search>
+			<add><![CDATA[$topic['first_post']['tags'] ? ' ' . $topic['first_post']['tags'] : '', ]]></add>
+		</operation>
+		<!-- Recent.template.php has the same code for action=unreadreplies. Use a replace to avoid writing on the first one. -->
+		<operation>
+			<search position="replace"><![CDATA[', $topic['is_sticky'] ? '<strong>' : '', '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '', ']]></search>
+			<add><![CDATA[', $topic['is_sticky'] ? '<strong>' : '', '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '', $topic['first_post']['tags'] ? ' ' . $topic['first_post']['tags'] : '', ']]></add>
+		</operation>
+	</file>
+	<file name="$themedir/Search.template.php">
+		<operation>
+			<search position="before"><![CDATA[<h5>', $topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.msg', $message['id'], '#msg', $message['id'], '">', $message['subject_highlighted'], '</a>]]></search>
+			<add><![CDATA[ ', $message['tags'] ? $message['tags'] : '', ']]></add>
+		</operation>
+		<!-- Search.template.php has the same code for action=search2. Use a replace to avoid writing on the first one. -->
+		<operation>
+			<search position="replace"><![CDATA[<h5>', $topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.', $message['start'], ';topicseen#msg', $message['id'], '">', $message['subject_highlighted'], '</a></h5>]]></search>
+			<add><![CDATA[<h5>', $topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.', $message['start'], ';topicseen#msg', $message['id'], '">', $message['subject_highlighted'], '</a> ', $message['tags'] ? $message['tags'] : '' ,'</h5>]]></add>
+		</operation>
+	</file>
+	<file name="$themedir/Stats.template.php">
+		<operation>
+			<search position="before"><![CDATA[<dt>
+									', $topic['link'], ]]></search>
+			<add><![CDATA[$topic['tags'] ? $topic['tags'] : '', ]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[<dt>', $topic['link'], ]]></search>
+			<add><![CDATA[$topic['tags'] ? $topic['tags'] : '', ]]></add>
+		</operation>
+	</file>
+	<file name="$themedir/css/index.css">
+		<operation>
+			<search position="after"><![CDATA[
+/* AJAX notification bar]]></search>
+			<add><![CDATA[
+.threadTag
+{
+	cursor: default;
+	display: inline-block;
+	padding: 0px 3px 1px;
+	margin: 0px 2px 0px 2px;
+	font-size: 9px;
+	font-weight: 800;
+	color: #ffffff;
+	line-height: 1.2em;
+	/* Some CSS3 goodness */
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+}
+a.threadTag
+{
+	color: #fff;
+	text-decoration: none;
+}]]></add>
+		</operation>
+	</file>
+	<file name="$languagedir/Modifications.english.php">
+		<operation>
+			<search position="end" />
+			<add><![CDATA[
+$txt['sstd_search_tag'] = 'Search all threads that are tagged [%1$s]';]]></add>
+		</operation>
+	</file>
+</modification>

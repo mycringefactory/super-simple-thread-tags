@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>WadaNon:SuperSimpleThreadTags</id>
+	<version>1.1a</version>
+	<file name="$sourcedir/Subs.php">
+		<operation>
+			<search position="replace"><![CDATA[
+		if (!$context['is_guest'] && $canSearch)]]></search>
+			<add><![CDATA[
+		if (!$context['user']['is_guest'] && $canSearch)]]></add>
+		</operation>
+	</file>
+</modification>

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>WadaNon:SuperSimpleThreadTags</id>
+	<version>1.1a</version>
+	<file name="$sourcedir/Subs.php">
+		<operation>
+			<search position="after"><![CDATA[
+	preg_match_all('/\[(.*?)\]/', $title, $matches);]]></search>
+			<add><![CDATA[
+	global $context, $scripturl, $txt;
+	static $canSearch = null;
+
+	// Save the search permission to avoid adding more queries to the db.
+	// It saves lives (and servers) when there are too many tags to parse.
+	if ($canSearch === null)
+		$canSearch = allowedTo('search_posts');
+]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[
+		$tags .= '<span class="threadTag" style="background-color: ' . $color . ';">' . $tag . '</span>';]]></search>
+			<add><![CDATA[
+		if (!$context['user']['is_guest'] && $canSearch)
+			$tags .= '<a class="threadTag" style="background-color: ' . $color . ';" href="' . $scripturl . '?action=search2;search=' . htmlspecialchars('[' . $tag . ']') . '" title="' . sprintf($txt['sstd_search_tag'], $tag) . '">' . $tag . '</a>';
+		else
+			$tags .= '<span class="threadTag" style="background-color: ' . $color . ';">' . $tag . '</span>';]]></add>
+		</operation>
+	</file>
+	<file name="$themedir/css/index.css">
+		<operation>
+			<search position="after"><![CDATA[
+/* AJAX notification bar]]></search>
+			<add><![CDATA[
+a.threadTag
+{
+	color: #fff;
+	text-decoration: none;
+}]]></add>
+		</operation>
+	</file>
+	<file name="$languagedir/Modifications.english.php">
+		<operation>
+			<search position="end" />
+			<add><![CDATA[
+$txt['sstd_search_tag'] = 'Search all threads that are tagged [%1$s]';]]></add>
+		</operation>
+	</file>
+</modification>
