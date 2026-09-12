@@ -15,7 +15,7 @@ jobs:
 
       - name: Create zip archive
         run: |
-          zip -r simple-simple-thread-tags.zip simple-simple-thread-tags -x ".git/*" ".github/*"
+          zip -r simple-simple-thread-tags.zip . -x ".git/*" ".github/*"
 
       - name: Upload zip
         uses: actions/upload-artifact@v4
