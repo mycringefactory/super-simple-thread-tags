@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>WadaNon:SuperSimpleThreadTags</id>
+	<version>1.2</version>
+	<file name="$boarddir/SSI.php">
+		<operation>
+			<search position="after"><![CDATA[
+		// Censor it!
+		censorText($row['subject']);
+		censorText($row['body']);
+
+		$preview = strip_tags(strtr($row['body'], array('<br />' => '&#10;')));]]></search>
+			<add><![CDATA[
+		// Make our tags for SSI.
+		$threadTags = makeThreadTags($row['subject']);
+
+		$row['subject'] = $threadTags[0];
+		$threadTags = $threadTags[1];]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'] . '" rel="nofollow">' . $row['subject'] . '</a>',]]></search>
+			<add><![CDATA[
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'] . '" rel="nofollow">' . $row['subject'] . '</a>' . $threadTags,
+			// Make a clean version of the link, for those people who want it.
+			'link_clean' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'] . '" rel="nofollow">' . $row['subject'] . '</a>',
+			'tags' => $threadTags,]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+		// Censor the subject.
+		censorText($row['subject']);
+		censorText($row['body']);
+
+		if (empty($modSettings['messageIconChecks_disable']) && !isset($icon_sources[$row['icon']]))
+			$icon_sources[$row['icon']] = file_exists($settings['theme_dir'] . '/images/post/' . $row['icon'] . '.gif') ? 'images_url' : 'default_images_url';]]></search>
+			<add><![CDATA[
+		// Make our tags for SSI.
+		$threadTags = makeThreadTags($row['subject']);
+
+		$row['subject'] = $threadTags[0];
+		$threadTags = $threadTags[1];]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#new" rel="nofollow">' . $row['subject'] . '</a>',]]></search>
+			<add><![CDATA[
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#new" rel="nofollow">' . $row['subject'] . '</a>' . $threadTags,
+			// Make a clean version of the link, for those people who want it.
+			'link_clean' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#new" rel="nofollow">' . $row['subject'] . '</a>',
+			'tags' => $threadTags,]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+		censorText($row['subject']);
+
+		$topics[] = array(]]></search>
+			<add><![CDATA[
+		// Make our tags for SSI.
+		$threadTags = makeThreadTags($row['subject']);
+
+		$row['subject'] = $threadTags[0];
+		$threadTags = $threadTags[1];]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['subject'] . '</a>',]]></search>
+			<add><![CDATA[
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['subject'] . '</a>' . $threadTags,
+			'link_clean' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['subject'] . '</a>',
+			'tags' => $threadTags,]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+		censorText($row['subject']);
+		censorText($row['body']);
+
+		$return[] = array(]]></search>
+			<add><![CDATA[
+		// Make our tags for SSI.
+		$threadTags = makeThreadTags($row['subject']);
+
+		$row['subject'] = $threadTags[0];
+		$threadTags = $threadTags[1];]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+			'time' => timeformat($row['poster_time']),
+			'timestamp' => forum_time(true, $row['poster_time']),
+			'body' => $row['body'],]]></search>
+			<add><![CDATA[
+			'tags' => $threadTags,]]></add>
+		</operation>
+	</file>
+</modification>

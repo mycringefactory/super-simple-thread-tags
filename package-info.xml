@@ -12,6 +12,13 @@
 		<modification>install/install-clean-2010.xml</modification>
 	</install>
 
+	<!-- Install sections -->
+	<install for="2.1.7">
+		<readme>LICENSE</readme>
+		<modification>install/install-clean-2.1.7.xml</modification>
+	</install>
+
+
 	<!-- Upgrade sections -->
 	<upgrade from="1.0a" for="2.0 - 2.0.99">
 		<modification type="file">upgrade/from-10a.xml</modification>
@@ -22,9 +29,16 @@
 	<upgrade from="1.1a" for="2.0 - 2.0.99">
 		<modification type="file">upgrade/from-11a.xml</modification>
 	</upgrade>
+	<upgrade for="2.1.7">
+		<modification type="file">upgrade/for-2.1.7.xml</modification>
+	</upgrade>
 
 	<!-- Uninstall sections -->
 	<uninstall for="2.0 - 2.0.99">
 		<modification reverse="true">install/install-clean-2010.xml</modification>
+	</uninstall>
+
+	<uninstall for="2.1.7">
+		<modification reverse="true">install/install-clean-2.1.7.xml</modification>
 	</uninstall>
 </package-info>

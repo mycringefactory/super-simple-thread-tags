@@ -1,0 +1,24 @@
+name: Create zip
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  create-zip:
+    name: Create the zip
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create zip archive
+        run: |
+          zip -r simple-simple-thread-tags.zip simple-simple-thread-tags -x ".git/*" ".github/*"
+
+      - name: Upload zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: simple-simple-thread-tags
+          path: simple-simple-thread-tags.zip
