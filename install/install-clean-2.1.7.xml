@@ -251,7 +251,7 @@ function stripThreadTags($title)
 			]]></add>
 		</operation>
 	</file>
-	<file name="$themedir/MessageIndex.template.php">
+	<file name="/srv/dumb/Themes/DUMBDefault/MessageIndex.template.php">
 		<operation>
 			<search position="before"><![CDATA[foreach ($context['topics'] as $topic)
 		{]]></search>
@@ -271,6 +271,24 @@ function stripThreadTags($title)
 				$newSubject = $threadTags[0] . ' ' . $threadTags[1];
 				$context['topics_headers']['last_post'] = str_replace($oldSubject, $newSubject, $context['topics_headers']['last_post']);
 			]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[function template_bi_board_lastpost($board)
+{
+	if (!empty($board['last_post']['id']))
+		echo '
+			<p>', $board['last_post']['last_post_message'], '</p>';
+}]]></search>
+			<add><![CDATA[function template_bi_board_lastpost_tagged($board)
+{
+	if (!empty($board['last_post']['id']))
+	{
+		$threadTags = makeThreadTags($board['last_post']['last_post_message']);
+		$board['last_post']['last_post_message'] = $threadTags[0] . ' ' . $threadTags[1];
+		echo '
+			<p>', $board['last_post']['last_post_message'], '</p>';
+	}
+}]]></add>
 		</operation>
 
 	</file>
@@ -323,7 +341,7 @@ function stripThreadTags($title)
 			<add><![CDATA[ ', $message['tags'] ? $message['tags'] : '', ']]></add>
 		</operation>
 	</file>
-	<file name="$themedir/css/index.css">
+	<file name="/srv/dumb/Themes/DUMBDefault/css/index.css">
 		<operation>
 			<search position="after"><![CDATA[
 /* AJAX notification bar]]></search>
