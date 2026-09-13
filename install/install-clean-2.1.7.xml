@@ -313,7 +313,7 @@ function stripThreadTags($title)
 			]]></add>
 		</operation>
 	</file>
-	<file name="/srv/dumb/Themes/DUMBDefault/MessageIndex.template.php">
+	<file name="Themes/DUMBDefault/MessageIndex.template.php">
 		<operation>
 			<search position="before"><![CDATA[foreach ($context['topics'] as $topic)
 		{]]></search>
@@ -403,7 +403,7 @@ function stripThreadTags($title)
 			<add><![CDATA[ ', $message['tags'] ? $message['tags'] : '', ']]></add>
 		</operation>
 	</file>
-	<file name="/srv/dumb/Themes/DUMBDefault/css/index.css">
+	<file name="Themes/DUMBDefault/css/index.css">
 		<operation>
 			<search position="after"><![CDATA[
 /* AJAX notification bar]]></search>
